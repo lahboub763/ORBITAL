@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBITAL | Planet Explorer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #070910;
+            --panel: #0d101a;
+            --gold: #e7c36a;
+            --text: #f4f4f7;
+            --muted: #9298aa;
+            --border: rgba(255,255,255,.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 50% 20%, #171a2a, var(--bg) 65%);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar {
+            min-height: 76px;
+            padding: 20px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font: 700 23px 'Space Grotesk', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .logo span,
+        .gold {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            font-size: 12px;
+            transition: color .2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+            color: var(--gold);
+        }
+
+        .page {
+            width: min(1150px, 90%);
+            margin: auto;
+            padding: 55px 0 30px;
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 13px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        h1 {
+            font-size: clamp(35px, 5vw, 55px);
+            letter-spacing: -2px;
+            margin-bottom: 13px;
+        }
+
+        .subtitle {
+            max-width: 620px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 30px;
+            margin: 35px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #111522, #0a0c14);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        .planet-stage {
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orbit {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border: 1px solid rgba(231,195,106,.15);
+            border-radius: 50%;
+        }
+
+        .orbit-two {
+            width: 340px;
+            height: 210px;
+            transform: rotate(-25deg);
+        }
+
+        .planet {
+            width: 175px;
+            height: 175px;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            background: var(--planet-color);
+            box-shadow:
+                inset -30px -20px 40px rgba(0,0,0,.55),
+                inset 10px 5px 20px rgba(255,255,255,.18),
+                0 0 55px var(--planet-glow);
+            transition: background .3s, box-shadow .3s;
+        }
+
+        .planet-ring {
+            display: none;
+            position: absolute;
+            z-index: 3;
+            width: 275px;
+            height: 80px;
+            border: 12px solid rgba(207,184,139,.7);
+            border-left-color: rgba(207,184,139,.3);
+            border-right-color: rgba(207,184,139,.3);
+            border-radius: 50%;
+            transform: rotate(-22deg);
+        }
+
+        .planet-ring.visible {
+            display: block;
+        }
+
+        .planet-number {
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .planet-info h2 {
+            font-size: clamp(35px, 4vw, 48px);
+            margin-bottom: 14px;
+        }
+
+        .planet-info p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .selector {
+            margin-top: 25px;
+        }
+
+        .selector label {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            max-width: 320px;
+            padding: 13px;
+            background: #090c14;
+            color: var(--text);
+            border: 1px solid rgba(231,195,106,.4);
+            border-radius: 8px;
+            font: inherit;
+            outline: none;
+        }
+
+        .section-heading {
+            margin: 42px 0 20px;
+        }
+
+        .section-heading h2 {
+            font-size: 25px;
+            margin-top: 7px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .stat-card {
+            padding: 22px 17px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            transition: transform .2s, border-color .2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(231,195,106,.4);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .stat-value {
+            font: 600 clamp(18px, 2vw, 25px) 'Space Grotesk', sans-serif;
+            overflow-wrap: anywhere;
+        }
+
+        .stat-unit {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            padding: 25px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+
+        .fact-list {
+            list-style: none;
+        }
+
+        .fact-list li {
+            color: #c6cad5;
+            font-size: 13px;
+            line-height: 1.8;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .fact-list li:last-child {
+            border-bottom: 0;
+        }
+
+        .fact-list li::before {
+            content: "✳";
+            color: var(--gold);
+            margin-right: 10px;
+        }
+
+        .page-link {
+            display: inline-block;
+            margin-top: 18px;
+            margin-right: 18px;
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .page-link:hover {
+            color: white;
+        }
+
+        .footer {
+            margin-top: 45px;
+            padding: 22px 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .page {
+                padding-top: 35px;
+            }
+
+            .hero {
+                padding: 18px;
+            }
+
+            .planet {
+                width: 140px;
+                height: 140px;
+            }
+
+            .orbit {
+                width: 235px;
+                height: 235px;
+            }
+
+            .orbit-two {
+                width: 280px;
+                height: 180px;
+            }
+
+            .planet-ring {
+                width: 220px;
+                height: 65px;
+            }
+
+            .stats-grid {
+                gap: 9px;
+            }
+
+            .stat-card {
+                padding: 16px 12px;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a href="index.html" class="logo">ORBITAL<span>.</span></a>
+
+    <nav class="nav-links">
+        <a href="index.html">Explorer</a>
+        <a href="compare.html">Comparison</a>
+        <a href="planet.html" class="active">Planets</a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section>
+        <div class="eyebrow">ORBITAL / PLANETARY DATABASE</div>
+        <h1>Discover our <span class="gold">worlds.</span></h1>
+        <p class="subtitle">
+            Explore the planets of our Solar System, discover their physical
+            properties, and learn fascinating facts about each world.
+        </p>
+    </section>
+
+    <section class="hero">
+
+        <div class="planet-stage">
+            <div class="orbit"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="planet-ring" id="planetRing"></div>
+            <div class="planet" id="planetVisual"></div>
+        </div>
+
+        <div class="planet-info">
+            <div class="planet-number" id="planetNumber"></div>
+            <h2 id="planetName">Earth</h2>
+            <p id="planetDescription"></p>
+
+            <div class="selector">
+                <label for="planetSelect">SELECT A PLANET</label>
+                <select id="planetSelect">
+                    <option value="Mercury">Mercury</option>
+                    <option value="Venus">Venus</option>
+                    <option value="Earth">Earth</option>
+                    <option value="Mars">Mars</option>
+                    <option value="Jupiter">Jupiter</option>
+                    <option value="Saturn">Saturn</option>
+                </select>
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <div class="section-heading">
+            <div class="eyebrow">01 / SCIENTIFIC DATA</div>
+            <h2>Planetary statistics</h2>
+            <p>Approximate scientific reference values.</p>
+        </div>
+
+        <div class="stats-grid">
+            <article class="stat-card">
+                <div class="stat-label">MEAN RADIUS</div>
+                <div class="stat-value" id="radius"></div>
+                <div class="stat-unit">Kilometers</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">MASS</div>
+                <div class="stat-value" id="mass"></div>
+                <div class="stat-unit">× 10²⁴ kg</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">DISTANCE FROM SUN</div>
+                <div class="stat-value" id="distance"></div>
+                <div class="stat-unit">Million kilometers</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">ORBITAL PERIOD</div>
+                <div class="stat-value" id="period"></div>
+                <div class="stat-unit">Earth days</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">TEMPERATURE</div>
+                <div class="stat-value" id="temperature"></div>
+                <div class="stat-unit">Approximate average</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">SURFACE GRAVITY</div>
+                <div class="stat-value" id="gravity"></div>
+                <div class="stat-unit">m/s²</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">KNOWN MOONS</div>
+                <div class="stat-value" id="moons"></div>
+                <div class="stat-unit">Natural satellites</div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">PLANET TYPE</div>
+                <div class="stat-value" id="type"></div>
+                <div class="stat-unit">Classification</div>
+            </article>
+        </div>
+    </section>
+
+    <section class="lower-grid">
+
+        <article class="info-card">
+            <div class="eyebrow">02 / DID YOU KNOW?</div>
+            <h3>Interesting facts</h3>
+            <ul class="fact-list" id="factList"></ul>
+        </article>
+
+        <article class="info-card">
+            <div class="eyebrow">03 / CONTINUE EXPLORING</div>
+            <h3>Your next mission</h3>
+            <ul class="fact-list">
+                <li>Explore planetary motion in the interactive simulation.</li>
+                <li>Compare planet sizes, gravity and orbital periods.</li>
+                <li>Discover the differences between rocky planets and gas giants.</li>
+            </ul>
+
+            <a href="index.html" class="page-link">OPEN EXPLORER ↗</a>
+            <a href="compare.html" class="page-link">COMPARE PLANETS ↗</a>
+        </article>
+
+    </section>
+
+    <footer class="footer">
+        <span>ORBITAL <span class="gold">/</span> A STUDY OF MOTION</span>
+        <span>BUILT FOR THE CURIOUS ✳</span>
+    </footer>
+
+</main>
+
+<script>
+const planets = {
+    Mercury: {
+        number: "PLANET 01 / TERRESTRIAL",
+        radius: "2,439.7",
+        mass: "0.3301",
+        distance: "57.9",
+        period: "88",
+        temperature: "167°C",
+        gravity: "3.70",
+        moons: "0",
+        type: "Terrestrial",
+        color: "radial-gradient(circle at 30% 25%, #c7c0b6, #77716b 50%, #35343a 85%)",
+        glow: "rgba(168,151,133,.2)",
+        description: "Mercury is the smallest planet and the closest to the Sun. Its cratered surface preserves evidence of ancient impacts.",
+        facts: [
+            "Mercury is the smallest planet in our Solar System.",
+            "A year on Mercury lasts 88 Earth days.",
+            "Mercury has almost no substantial atmosphere."
+        ]
+    },
+
+    Venus: {
+        number: "PLANET 02 / TERRESTRIAL",
+        radius: "6,051.8",
+        mass: "4.8675",
+        distance: "108.2",
+        period: "224.7",
+        temperature: "464°C",
+        gravity: "8.87",
+        moons: "0",
+        type: "Terrestrial",
+        color: "radial-gradient(circle at 30% 25%, #f5d69b, #bc8951 50%, #67442c 85%)",
+        glow: "rgba(232,169,93,.2)",
+        description: "Venus has a thick carbon dioxide atmosphere. Its powerful greenhouse effect makes it the hottest planet in the Solar System.",
+        facts: [
+            "Venus is the hottest planet in the Solar System.",
+            "Its atmosphere traps enormous amounts of heat.",
+            "Venus rotates in the opposite direction to most planets."
+        ]
+    },
+
+    Earth: {
+        number: "PLANET 03 / TERRESTRIAL",
+        radius: "6,371",
+        mass: "5.972",
+        distance: "149.6",
+        period: "365.25",
+        temperature: "15°C",
+        gravity: "9.81",
+        moons: "1",
+        type: "Terrestrial",
+        color: "radial-gradient(circle at 30% 25%, #9de7f3, #2673bd 42%, #10234c 78%)",
+        glow: "rgba(54,132,255,.28)",
+        description: "Earth is our home planet and the only world currently known to support life. Liquid-water oceans and a protective atmosphere make it unique.",
+        facts: [
+            "Earth is the only planet currently known to host life.",
+            "About 71% of Earth's surface is covered by water.",
+            "Earth orbits the Sun in approximately 365.25 days."
+        ]
+    },
+
+    Mars: {
+        number: "PLANET 04 / TERRESTRIAL",
+        radius: "3,389.5",
+        mass: "0.6417",
+        distance: "227.9",
+        period: "687",
+        temperature: "-65°C",
+        gravity: "3.71",
+        moons: "2",
+        type: "Terrestrial",
+        color: "radial-gradient(circle at 30% 25%, #f6b18a, #bd5639 48%, #692c28 85%)",
+        glow: "rgba(221,92,53,.22)",
+        description: "Mars is a cold desert world with a thin atmosphere. Its ancient terrain preserves evidence that liquid water once existed on its surface.",
+        facts: [
+            "Iron-rich dust gives Mars its reddish appearance.",
+            "Mars has two small moons: Phobos and Deimos.",
+            "Scientists study Mars for signs of ancient life."
+        ]
+    },
+
+    Jupiter: {
+        number: "PLANET 05 / GAS GIANT",
+        radius: "69,911",
+        mass: "1898.2",
+        distance: "778.6",
+        period: "4,332.6",
+        temperature: "-110°C",
+        gravity: "24.79",
+        moons: "95",
+        type: "Gas giant",
+        color: "repeating-linear-gradient(0deg, #c99d75 0px, #e6c9a3 12px, #a96e50 24px, #eed6b5 36px, #9a6348 48px)",
+        glow: "rgba(210,160,112,.2)",
+        description: "Jupiter is the largest planet. Its atmosphere contains enormous cloud bands and the famous Great Red Spot, a gigantic storm.",
+        facts: [
+            "Jupiter is the largest planet in the Solar System.",
+            "The Great Red Spot is an enormous atmospheric storm.",
+            "Jupiter's four largest moons include Europa and Ganymede."
+        ]
+    },
+
+    Saturn: {
+        number: "PLANET 06 / GAS GIANT",
+        radius: "58,232",
+        mass: "568.34",
+        distance: "1,433.5",
+        period: "10,759",
+        temperature: "-140°C",
+        gravity: "10.44",
+        moons: "274",
+        type: "Gas giant",
+        color: "repeating-linear-gradient(0deg, #f0d9a2 0px, #c9ad79 10px, #e8c995 20px, #a98b5f 31px, #eed8a7 43px)",
+        glow: "rgba(226,192,128,.2)",
+        description: "Saturn is a gas giant famous for its spectacular ring system, made mostly of countless pieces of ice and rocky material.",
+        facts: [
+            "Saturn is famous for its extensive ring system.",
+            "Saturn is less dense than water on average.",
+            "Its rings contain particles of many different sizes."
+        ]
+    }
+};
+
+const select = document.getElementById("planetSelect");
+
+function showPlanet(name) {
+    const p = planets[name];
+    if (!p) return;
+
+    document.getElementById("planetNumber").textContent = p.number;
+    document.getElementById("planetName").textContent = name;
+    document.getElementById("planetDescription").textContent = p.description;
+
+    document.getElementById("radius").textContent = p.radius;
+    document.getElementById("mass").textContent = p.mass;
+    document.getElementById("distance").textContent = p.distance;
+    document.getElementById("period").textContent = p.period;
+    document.getElementById("temperature").textContent = p.temperature;
+    document.getElementById("gravity").textContent = p.gravity;
+    document.getElementById("moons").textContent = p.moons;
+    document.getElementById("type").textContent = p.type;
+
+    const visual = document.getElementById("planetVisual");
+    visual.style.setProperty("--planet-color", p.color);
+    visual.style.setProperty("--planet-glow", p.glow);
+
+    document.getElementById("planetRing").classList.toggle(
+        "visible",
+        name === "Saturn"
+    );
+
+    const factList = document.getElementById("factList");
+    factList.replaceChildren();
+
+    p.facts.forEach(fact => {
+        const li = document.createElement("li");
+        li.textContent = fact;
+        factList.appendChild(li);
+    });
+
+    document.title = "ORBITAL | " + name;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("planet", name);
+    history.replaceState(null, "", url);
+}
+
+select.addEventListener("change", () => showPlanet(select.value));
+
+const params = new URLSearchParams(window.location.search);
+const requestedPlanet = params.get("planet");
+
+if (requestedPlanet && planets[requestedPlanet]) {
+    select.value = requestedPlanet;
+}
+
+showPlanet(select.value);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050813">
+  <title>ORBITAL — Solar System Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      ORBITAL<span class="brand-dot">.</span>
+    </a>
+
+    <nav class="topnav">
+      <a href="#mission" class="active">EXPLORER</a>
+      <a href="#destinations">DESTINATIONS</a>
+      <a href="#facts">DISCOVER</a>
+    </nav>
+
+    <div class="top-status">
+      <span class="status-light"></span>
+      SYSTEM ONLINE
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        01 — OUR SOLAR SYSTEM
+      </div>
+
+      <h1>Beyond the<br><span>ordinary.</span></h1>
+
+      <p class="hero-description">
+        A new perspective on our cosmic neighbourhood.<br>
+        Explore eight planets. Discover infinite wonder.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#mission" class="primary-button">
+          START EXPLORING <span class="arrow">↗</span>
+        </a>
+        <a href="#mission" class="scroll-hint">
+          <span class="scroll-icon">↓</span> SCROLL TO DISCOVER
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-orbit-art" aria-hidden="true">
+      <div class="hero-ring ring-one"></div>
+      <div class="hero-ring ring-two"></div>
+      <div class="hero-ring ring-three"></div>
+      <div class="hero-sun"></div>
+      <div class="hero-planet"></div>
+    </div>
+
+    <div class="hero-meta">
+      <span>SCIENTIFIC DATA · INTERACTIVE 3D</span>
+      <span>EST. 4.6 BILLION YEARS AGO</span>
+    </div>
+  </section>
+
+  <main>
+    <section class="mission section" id="mission">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> MISSION CONTROL</div>
+          <h2>Your universe<br><span>to discover.</span></h2>
+        </div>
+        <p>Choose a destination. Inspect its world.<br>Experience the scale of our solar system.</p>
+      </div>
+
+      <div class="explorer-layout">
+        <aside class="destination-panel panel" id="destinations">
+          <div class="panel-heading">
+            <span>DESTINATIONS</span>
+            <span class="counter">08</span>
+          </div>
+          <div id="planetList" class="planet-list"></div>
+          <div class="panel-note">
+            <span class="note-star">✳</span>
+            SELECT A PLANET<br>TO BEGIN YOUR JOURNEY
+          </div>
+        </aside>
+
+        <section class="scene-panel panel">
+          <div class="scene-topline">
+            <span><span class="status-light"></span> LIVE 3D ENVIRONMENT</span>
+            <span id="sceneStatus">INITIALISING...</span>
+          </div>
+
+          <div id="scene" class="scene">
+            <div id="loading" class="loading">
+              <span class="loader"></span>
+              <span>INITIALISING SOLAR SYSTEM</span>
+            </div>
+          </div>
+
+          <div class="scene-toolbar">
+            <div class="toolbar-group">
+              <button id="zoomOut" class="tool-button" aria-label="Zoom out">−</button>
+              <button id="zoomIn" class="tool-button" aria-label="Zoom in">+</button>
+              <button id="resetView" class="tool-button tool-label">RESET VIEW</button>
+            </div>
+            <div class="toolbar-group">
+              <button id="toggleOrbits" class="tool-button selected">ORBITS</button>
+              <button id="toggleLabels" class="tool-button selected">LABELS</button>
+              <button id="togglePause" class="tool-button">PAUSE</button>
+            </div>
+          </div>
+          <div class="scene-footnote">DRAG TO ROTATE · SCROLL TO ZOOM · SELECT A PLANET</div>
+        </section>
+
+        <aside class="planet-panel panel">
+          <div class="panel-heading">
+            <span>PLANETARY DOSSIER</span>
+            <span id="planetNumber" class="counter">03</span>
+          </div>
+          <div id="planetVisual" class="planet-visual earth-visual">
+            <div class="visual-orbit"></div>
+            <div class="visual-sphere"></div>
+          </div>
+          <div class="planet-kicker" id="planetKicker">THE BLUE MARBLE</div>
+          <h3 id="planetName">Earth</h3>
+          <p id="planetSummary" class="planet-summary">
+            Our pale blue home, the only known world to harbour life.
+          </p>
+
+          <div class="data-grid">
+            <div class="data-item">
+              <span>RADIUS</span>
+              <strong id="planetRadius">6,371 <small>KM</small></strong>
+            </div>
+            <div class="data-item">
+              <span>FROM SUN</span>
+              <strong id="planetDistance">149.6 <small>M KM</small></strong>
+            </div>
+            <div class="data-item">
+              <span>ORBITAL PERIOD</span>
+              <strong id="planetPeriod">365.25 <small>DAYS</small></strong>
+            </div>
+            <div class="data-item">
+              <span>KNOWN MOONS</span>
+              <strong id="planetMoons">1</strong>
+            </div>
+          </div>
+          <button id="focusPlanet" class="focus-button">FOCUS ON PLANET <span>↗</span></button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="facts section" id="facts">
+      <div class="facts-intro">
+        <div class="eyebrow"><span class="eyebrow-line"></span> THE BIG PICTURE</div>
+        <h2>Space is bigger<br><span>than you imagine.</span></h2>
+      </div>
+      <div class="facts-grid">
+        <article class="fact-card">
+          <span class="fact-index">01 / AGE</span>
+          <strong>4.6 <small>B</small></strong>
+          <p>Years since our solar system formed.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-index">02 / PLANETS</span>
+          <strong>08</strong>
+          <p>Planets orbiting our Sun.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-index">03 / STAR</span>
+          <strong>01</strong>
+          <p>Star at the centre of our system.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand" href="#">ORBITAL<span class="brand-dot">.</span></a>
+    <span>MADE FOR THE CURIOUS.</span>
+    <span>EXPLORE YOUR UNIVERSE ↗</span>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
