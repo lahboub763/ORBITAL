@@ -1,0 +1,63 @@
+# 🌌 ORBITAL — Solar System Explorer
+
+An interactive 3D solar system experience that lets users explore planets, control the simulation, and discover key planetary facts.
+
+🔗 **Live Demo:** https://lahboub763.github.io/ORBITAL/
+
+## ✨ Features
+
+- **Interactive 3D Scene** — Explore a visual representation of the Solar System.
+- **Planet Selection** — Select planets and explore their information.
+- **Focus Mode** — Focus the camera on a selected planet.
+- **Zoom Controls** — Zoom in and out of the scene.
+- **Pause and Resume** — Control the simulation.
+- **Orbital Paths** — Show or hide planetary orbits.
+- **Planet Labels** — Show or hide planet labels.
+- **Responsive Interface** — Explore the application on different screen sizes.
+
+## 🛠️ Technologies
+
+- HTML5
+- CSS3
+- JavaScript
+- Three.js
+- Git and GitHub Pages
+
+## 🚀 Getting Started
+
+To run the project locally:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/lahboub763/ORBITAL.git
+   ```
+
+2. Open the project folder in Visual Studio Code.
+3. Launch `index.html` using the Live Server extension.
+
+## 📁 Project Structure
+
+```text
+ORBITAL/
+├── index.html
+├── main.js
+├── style.css
+├── compare.html
+├── planet.html
+└── README.md
+```
+
+## 🎯 Project Goal
+
+ORBITAL was developed to explore interactive 3D web development and create an engaging educational experience for discovering the Solar System.
+
+## 👩‍💻 Author
+
+**Douae Lahboub**
+
+- GitHub: [@lahboub763](https://github.com/lahboub763)
+
+---
+
+If you find this project interesting, feel free to explore the live demo and the source code.
